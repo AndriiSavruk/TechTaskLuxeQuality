@@ -192,7 +192,82 @@ describe('Test cases', () => {
         await expect(cartList).toHaveTextContaining(productAddToCartName);
     })
 
-    it('Test case #6 Sorting', async () => {
+    it.skip('Test case #6 Sorting', async () => {
+        await browser.url(`https://www.saucedemo.com/`);
+        await LoginPage.login('standard_user', 'secret_sauce');
+
+        await browser.pause(2000);
+        // Check if user is on the inventory page
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
+        
+        const sortingBox = await $('.product_sort_container');
+        const inventoryList = await $('.inventory_list');
+        // Check if sorting 'Price(low to high)' sorts correct
+        await sortingBox.selectByAttribute('value','lohi');
+        await browser.pause(2000);
+        const firstElLoHi = await inventoryList.$$('.inventory_item')[0];
+        await expect(firstElLoHi).toHaveTextContaining('7.99');
+        const secondElLoHi = await inventoryList.$$('.inventory_item')[1];
+        await expect(secondElLoHi).toHaveTextContaining('9.99');
+        const thirdElLoHi = await inventoryList.$$('.inventory_item')[2];
+        await expect(thirdElLoHi).toHaveTextContaining('15.99');
+        const forthElLoHi = await inventoryList.$$('.inventory_item')[3];
+        await expect(forthElLoHi).toHaveTextContaining('15.99');
+        const fifthElLoHi = await inventoryList.$$('.inventory_item')[4];
+        await expect(fifthElLoHi).toHaveTextContaining('29.99');
+        const sixthElLoHi = await inventoryList.$$('.inventory_item')[5];
+        await expect(sixthElLoHi).toHaveTextContaining('49.99');
+
+        // Check if sorting 'Price(high to low)' sorts correct
+        await sortingBox.selectByAttribute('value','hilo');
+        await browser.pause(2000);
+        const firstElHiLo = await inventoryList.$$('.inventory_item')[0];
+        await expect(firstElHiLo).toHaveTextContaining('49.99');
+        const secondElHiLo = await inventoryList.$$('.inventory_item')[1];
+        await expect(secondElHiLo).toHaveTextContaining('29.99');
+        const thirdElHiLo = await inventoryList.$$('.inventory_item')[2];
+        await expect(thirdElHiLo).toHaveTextContaining('15.99');
+        const forthElHiLo = await inventoryList.$$('.inventory_item')[3];
+        await expect(forthElHiLo).toHaveTextContaining('15.99');
+        const fifthElHiLo = await inventoryList.$$('.inventory_item')[4];
+        await expect(fifthElHiLo).toHaveTextContaining('9.99');
+        const sixthElHiLo = await inventoryList.$$('.inventory_item')[5];
+        await expect(sixthElHiLo).toHaveTextContaining('7.99');
+
+        // Check if sorting 'Name(A to Z)' sorts correct
+        await sortingBox.selectByAttribute('value','az');
+        await browser.pause(2000);
+        const firstElaz = await inventoryList.$$('.inventory_item')[0];
+        await expect(firstElaz).toHaveTextContaining('Backpack');
+        const secondElaz = await inventoryList.$$('.inventory_item')[1];
+        await expect(secondElaz).toHaveTextContaining('Bike');
+        const thirdElaz = await inventoryList.$$('.inventory_item')[2];
+        await expect(thirdElaz).toHaveTextContaining('Bolt');
+        const forthElaz = await inventoryList.$$('.inventory_item')[3];
+        await expect(forthElaz).toHaveTextContaining('Fleece');
+        const fifthElaz = await inventoryList.$$('.inventory_item')[4];
+        await expect(fifthElaz).toHaveTextContaining('Onesie');
+        const sixthElaz = await inventoryList.$$('.inventory_item')[5];
+        await expect(sixthElaz).toHaveTextContaining('Test');
+
+        // Check if sorting 'Name(Z to A)' sorts correct
+        await sortingBox.selectByAttribute('value','za');
+        await browser.pause(2000);
+        const firstElza = await inventoryList.$$('.inventory_item')[0];
+        await expect(firstElza).toHaveTextContaining('Test');
+        const secondElza = await inventoryList.$$('.inventory_item')[1];
+        await expect(secondElza).toHaveTextContaining('Onesie');
+        const thirdElza = await inventoryList.$$('.inventory_item')[2];
+        await expect(thirdElza).toHaveTextContaining('Fleece');
+        const forthElza = await inventoryList.$$('.inventory_item')[3];
+        await expect(forthElza).toHaveTextContaining('Bolt');
+        const fifthElza = await inventoryList.$$('.inventory_item')[4];
+        await expect(fifthElza).toHaveTextContaining('Bike');
+        const sixthElza = await inventoryList.$$('.inventory_item')[5];
+        await expect(sixthElza).toHaveTextContaining('Backpack');
+    })
+
+    it.skip('Test case #7 Footer Links', async () => {
         await browser.url(`https://www.saucedemo.com/`);
         await LoginPage.login('standard_user', 'secret_sauce');
 
@@ -200,12 +275,97 @@ describe('Test cases', () => {
         // Check if user is on the inventory page
         await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
 
-        const sortingBox = await $('.product_sort_container');
-        await sortingBox.selectByAttribute('value','lohi');
+        // Check if Twitter icon opens Twitter page in new tab and return
+        const twitButton = await $('//*[@id="page_wrapper"]/footer/ul/li[1]/a');
+        await twitButton.click();
         await browser.pause(2000);
-        const inventoryList = await $('.inventory_list');
-        const firstElLoHi = await inventoryList.$$('.inventory_item')[0].$('.inventory_item_description').$('.inventory_item_price').getText();
-        await expect(firstElLoHi).toHaveText('$7.99');
+        const handles = await browser.getWindowHandles();
+        await browser.switchToWindow(handles[1]);
+        await browser.pause(2000);
+        await expect(browser).toHaveUrl('https://twitter.com/saucelabs');
+        await browser.closeWindow();
+        await browser.switchToWindow(handles[0]);
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
+
+         // Check if Facebook icon opens Facebook page in new tab and return
+         const facebButton = await $('//*[@id="page_wrapper"]/footer/ul/li[2]/a');
+         await facebButton.click();
+         await browser.pause(2000);
+         const handles1 = await browser.getWindowHandles();
+         await browser.switchToWindow(handles1[1]);
+         await browser.pause(2000);
+         await expect(browser).toHaveUrl('https://www.facebook.com/saucelabs');
+         await browser.closeWindow();
+         await browser.switchToWindow(handles1[0]);
+         await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
+
+         // Check if LinkedIn icon opens LinkedIn page in new tab and return
+         const linButton = await $('//*[@id="page_wrapper"]/footer/ul/li[3]/a');
+         await linButton.click();
+         await browser.pause(2000);
+         const handles2 = await browser.getWindowHandles();
+         await browser.switchToWindow(handles2[1]);
+         await browser.pause(2000);
+         await expect(browser).toHaveUrl('https://www.linkedin.com/company/sauce-labs/');
+         await browser.closeWindow();
+         await browser.switchToWindow(handles2[0]);
+         await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
+    })
+
+    it('Test case #8 Valid Checkout', async () => {
+        // Preconditions
+        await browser.url(`https://www.saucedemo.com/`);
+        await LoginPage.login('standard_user', 'secret_sauce');
+        await browser.pause(2000);
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
+
+        // Step 1
+        const productAddToCart = await $('#add-to-cart-sauce-labs-backpack');
+        const cartValue = await $('.shopping_cart_badge');
+        //Check if number near the cart at the top right increase by 1
+        let isCartNotEmpty = await cartValue.isDisplayed();
+        if(isCartNotEmpty) {
+            let startNum = Number(await cartValue.getText());
+            await productAddToCart.click();
+            let newNum = startNum + 1;
+            let newNumText = newNum.toString();
+            await browser.pause(2000);
+            await expect(cartValue).toHaveText(newNumText);
+        }
+        else {
+            await productAddToCart.click();
+            await browser.pause(2000);
+            await expect(cartValue).toHaveText('1');
+        }
+        // Step 2
+        // Check if product is added to cart
+        const productAddToCartName = 'Sauce Labs Backpack';
+        await $('.shopping_cart_link').click();
+        await browser.pause(2000);
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
+        const cartList = await $('.cart_list');
+        await expect(cartList).toHaveTextContaining(productAddToCartName);
+
+        // Step 3
+        // Click on the 'Checkout' button and check if Checkout form is displayed
+        const checkoutButton = await $('#checkout');
+        await checkoutButton.click();
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/checkout-step-one.html');
+        const checkoutForm = await $('//*[@id="checkout_info_container"]/div/form');
+        await expect(checkoutForm).toBeDisplayed();
+
+        // Steps 4,5,6
+        // Fill in the form and check data fields
+        const firstName = await $('#first-name');
+        await firstName.setValue('Peter');
+        await expect(firstName).toHaveValue('Peter');
+        const lastName = await $('#last-name');
+        await lastName.setValue('Pan');
+        await expect(lastName).toHaveValue('Pan');
+        const postalCode = await $('#postal-code');
+        await postalCode.setValue('79000');
+        await expect(postalCode).toHaveValue('79000');
+
     })
 })
 
