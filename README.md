@@ -1,1 +1,1 @@
-# TechTaskLuxeQuality
+To run the tests use 'npm run wdio' command

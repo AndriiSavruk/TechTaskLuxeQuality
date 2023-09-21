@@ -1,23 +1,16 @@
 const { Given, When, Then } = require('@wdio/cucumber-framework');
-const { expect, $ } = require('@wdio/globals')
-
-const LoginPage = require('../pageobjects/login.page');
-const SecurePage = require('../pageobjects/secure.page');
-
-const pages = {
-    login: LoginPage
-}
-
-Given(/^I am on the (\w+) page$/, async (page) => {
-    await pages[page].open()
+const { expect, $ } = require('@wdio/globals');
+  
+Given(/^I am on the login page$/, async () => {
+	await browser.url('https://www.saucedemo.com/');
 });
 
-When(/^I login with (\w+) and (.+)$/, async (username, password) => {
-    await LoginPage.login(username, password)
+When(/^I click on 'Login' button$/,  async () => {
+	(await $('#login-button')).click();
+    await browser.pause(2000);
 });
 
-Then(/^I should see a flash message saying (.*)$/, async (message) => {
-    await expect(SecurePage.flashAlert).toBeExisting();
-    await expect(SecurePage.flashAlert).toHaveTextContaining(message);
+Then(/^I should see 'Epic sadface: Username is required' error message$/, async () => {
+	const errorMessage = await $('//*[@id="login_button_container"]/div/form/div[3]/h3');
+    await expect(errorMessage).toHaveTextContaining('Epic sadface: Username is required');
 });
-
