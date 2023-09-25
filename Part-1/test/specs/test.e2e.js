@@ -1,9 +1,10 @@
 import { expect } from '@wdio/globals'
 import LoginPage from '../pageobjects/login.page.js'
-import loginPage from '../pageobjects/login.page.js';
+import InventoryPage from '../pageobjects/inventory.page.js'
+import CartPage from '../pageobjects/cart.page.js'
 
-describe('Test cases', () => {
-    it.only('Test case #1 Valid Login', async () => {
+describe.skip('Login & Logout block', () => {
+    it('Test case #1 Valid Login', async () => {
         // Precondition
         await browser.url(`https://www.saucedemo.com/`);
        
@@ -13,24 +14,23 @@ describe('Test cases', () => {
         await expect(LoginPage.inputUserName).toHaveValue('standard_user');
         
         // Step 2
-        await loginPage.setPasswordInput('secret_sauce');
+        await LoginPage.setPasswordInput('secret_sauce');
         // Check if data is entered to the field
         await expect(LoginPage.inputPassword).toHaveValue('secret_sauce');
         // Check if data is represented as dots instead of characters
         await expect(LoginPage.inputPassword).toHaveAttribute('type','password');
 
         // Step 3
-        await $('#login-button').click();
+        // await $('#login-button').click();
+        await LoginPage.clickOnLoginButton();
         await browser.pause(2000);
         // Check if user is redirected to inventory page
         await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
         // Check if 'Products' block is displayed
-        const productsBlock = await $('#header_container');
-        await expect(productsBlock).toBeDisplayed();
-        await expect(productsBlock).toHaveTextContaining('Products');
+        await expect(InventoryPage.productsBlock).toBeDisplayed();
+        await expect(InventoryPage.productsBlock).toHaveTextContaining('Products');
         // Check if Cart is displayed
-        const cartIcon = await $('#shopping_cart_container');
-        await expect(cartIcon).toBeDisplayed();
+        await expect(InventoryPage.cartIcon).toBeDisplayed();
     })
 
     it('test case #2 Login with invalid password', async () => {
@@ -38,35 +38,30 @@ describe('Test cases', () => {
         await browser.url(`https://www.saucedemo.com/`);
 
         // Step 1
-        const userNameField = await $('#user-name');
-        await userNameField.setValue('standard_user');
+        await LoginPage.setUserNameInput('standard_user');
         // Check if data is entered to the field
-        await expect(userNameField).toHaveValue('standard_user');
+        await expect(LoginPage.inputUserName).toHaveValue('standard_user');
 
         // Step 2
-        const passwordField = await $('#password');
-        await passwordField.setValue('wrong_password');
+        await LoginPage.setPasswordInput('wrong_password');
         // Check if data is entered to the field
-        await expect(passwordField).toHaveValue('wrong_password');
+        await expect(LoginPage.inputPassword).toHaveValue('wrong_password');
         // Check if data is represented as dots instead of characters
-        await expect(passwordField).toHaveAttribute('type', 'password');
+        await expect(LoginPage.inputPassword).toHaveAttribute('type','password');
 
         // Step 3
-        await $('#login-button').click();
+        await LoginPage.clickOnLoginButton();
         await browser.pause(2000);
         // Check if "X" icon is displayed on the Login field (check if svg element appears)
-        const logDiv = await $('//*[@id="login_button_container"]/div/form/div[1]');
-        await expect(logDiv).toHaveChildren(2);
+        await expect(LoginPage.logDiv).toHaveChildren(2);
         // Check if "X" icon is displayed on the Password field (check if svg element appears)
-        const pasDiv = await $('//*[@id="login_button_container"]/div/form/div[2]');
-        await expect(pasDiv).toHaveChildren(2);
+        await expect(LoginPage.pasDiv).toHaveChildren(2);
         // Check if login and password fields are highlighted with red
-        await expect(userNameField).toHaveAttributeContaining('class','error');
-        await expect(passwordField).toHaveAttributeContaining('class','error');
+        await expect(LoginPage.inputUserName).toHaveAttributeContaining('class','error');
+        await expect(LoginPage.inputPassword).toHaveAttributeContaining('class','error');
         // Check if epic sadface is displayed
-        const epicSadface = await $('//*[@id="login_button_container"]/div/form/div[3]/h3');
-        await expect(epicSadface).toBeDisplayed();
-        await expect(epicSadface).toHaveText('Epic sadface: Username and password do not match any user in this service');
+        await expect(LoginPage.epicSadface).toBeDisplayed();
+        await expect(LoginPage.epicSadface).toHaveText('Epic sadface: Username and password do not match any user in this service');
     })
 
     it('Test case #3 Login with invalid login', async () => {
@@ -74,146 +69,186 @@ describe('Test cases', () => {
         await browser.url(`https://www.saucedemo.com/`);
 
         // Step 1
-        const userNameField = await $('#user-name');
-        await userNameField.setValue('standarD_user');
+        await LoginPage.setUserNameInput('standarD_user');
         // Check if data is entered to the field
-        await expect(userNameField).toHaveValue('standarD_user');
+        await expect(LoginPage.inputUserName).toHaveValue('standarD_user');
 
         // Step 2
-        const passwordField = await $('#password');
-        await passwordField.setValue('secret_sauce');
+        await LoginPage.setPasswordInput('secret_sauce');
         // Check if data is entered to the field
-        await expect(passwordField).toHaveValue('secret_sauce');
+        await expect(LoginPage.inputPassword).toHaveValue('secret_sauce');
         // Check if data is represented as dots instead of characters
-        await expect(passwordField).toHaveAttribute('type', 'password');
+        await expect(LoginPage.inputPassword).toHaveAttribute('type','password');
 
         // Step 3
-        await $('#login-button').click();
+        await LoginPage.clickOnLoginButton();
         await browser.pause(2000);
         // Check if "X" icon is displayed on the Login field (check if svg element appears)
-        const logDiv = await $('//*[@id="login_button_container"]/div/form/div[1]');
-        await expect(logDiv).toHaveChildren(2);
+        await expect(LoginPage.logDiv).toHaveChildren(2);
         // Check if "X" icon is displayed on the Password field (check if svg element appears)
-        const pasDiv = await $('//*[@id="login_button_container"]/div/form/div[2]');
-        await expect(pasDiv).toHaveChildren(2);
+        await expect(LoginPage.pasDiv).toHaveChildren(2);
         // Check if login and password fields are highlighted with red
-        await expect(userNameField).toHaveAttributeContaining('class','error');
-        await expect(passwordField).toHaveAttributeContaining('class','error');
+        await expect(LoginPage.inputUserName).toHaveAttributeContaining('class','error');
+        await expect(LoginPage.inputPassword).toHaveAttributeContaining('class','error');
         // Check if epic sadface is displayed
-        const epicSadface = await $('//*[@id="login_button_container"]/div/form/div[3]/h3');
-        await expect(epicSadface).toBeDisplayed();
-        await expect(epicSadface).toHaveText('Epic sadface: Username and password do not match any user in this service');
+        await expect(LoginPage.epicSadface).toBeDisplayed();
+        await expect(LoginPage.epicSadface).toHaveText('Epic sadface: Username and password do not match any user in this service');
     })
 
-    it('Test case#4 Logout', async ()=> {
+    it('Test case #4 Logout', async ()=> {
         // Preconditions
         await browser.url(`https://www.saucedemo.com/`);
         await LoginPage.login('standard_user', 'secret_sauce');
-        await browser.pause(2000);
         // Check if user is on the inventory page
         await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
 
         // Step 1
-        const burgerButton = await $('#react-burger-menu-btn');
-        await burgerButton.click();
-        await browser.pause(2000);
-        const burgerMenu = await $('//*[@id="menu_button_container"]/div/div[2]/div[1]/nav');
+        await InventoryPage.clickOnBurgerButton();
         // Check if the menu is expanded
-        await expect(burgerMenu).toBeDisplayed();
+        await expect(InventoryPage.burgerMenu).toBeDisplayed();
         // Check if the menu has 4 items
-        await expect(burgerMenu).toHaveChildren(4);
+        await expect(InventoryPage.burgerMenu).toHaveChildren(4);
 
         // Step 2
-        const logoutButton = await $('#logout_sidebar_link');
-        await logoutButton.click();
+        await InventoryPage.clickOnLogoutButton();
         await browser.pause(2000);
         // Check if user is redirected to the 'Login' page
         await expect(browser).toHaveUrl('https://www.saucedemo.com/');
         // Check if 'Login' field is empty
-        const userNameField = await $('#user-name');
-        await expect(userNameField).toHaveValue('');
+        await expect(LoginPage.inputUserName).toHaveValue('');
         // Check if 'Password' field is empty
-        const passwordField = await $('#password');
-        await expect(passwordField).toHaveValue('');
+        await expect(LoginPage.inputPassword).toHaveValue('');
     })
+})
+
+describe('Cart block', () => {
 
     it('Test case #5 Saving the cart after logout', async () => {
         // Preconditions
         await browser.url(`https://www.saucedemo.com/`);
         await LoginPage.login('standard_user', 'secret_sauce');
-        await browser.pause(2000);
         // Check if user is on the inventory page
         await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
 
         // Step 1
-        const productAddToCart = await $('#add-to-cart-sauce-labs-backpack');
-        const cartValue = await $('.shopping_cart_badge');
         //Check if number near the cart at the top right increase by 1
-        let isCartNotEmpty = await cartValue.isDisplayed();
+        let isCartNotEmpty = await InventoryPage.cartValue.isDisplayed();
         if(isCartNotEmpty) {
-            let startNum = Number(await cartValue.getText());
-            await productAddToCart.click();
+            let startNum = Number(await InventoryPage.cartValue.getText());
+            await InventoryPage.clickOnBackpackAddToCart();
             let newNum = startNum + 1;
             let newNumText = newNum.toString();
             await browser.pause(2000);
-            await expect(cartValue).toHaveText(newNumText);
+            await expect(InventoryPage.cartValue).toHaveText(newNumText);
         }
         else {
-            await productAddToCart.click();
+            await InventoryPage.clickOnBackpackAddToCart();
             await browser.pause(2000);
-            await expect(cartValue).toHaveText('1');
+            await expect(InventoryPage.cartValue).toHaveText('1');
         }
         // Check if product is added to cart
-        const productAddToCartName = 'Sauce Labs Backpack';
-        await $('.shopping_cart_link').click();
+        const backpackAddToCartName = 'Sauce Labs Backpack';
+        await InventoryPage.clickOnCartLink();
         await browser.pause(2000);
         await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
-        const cartList = await $('.cart_list');
-        await expect(cartList).toHaveTextContaining(productAddToCartName);
+        await expect(CartPage.cartList).toHaveTextContaining(backpackAddToCartName);
 
         // Step 2
-        const burgerButton = await $('#react-burger-menu-btn');
-        await burgerButton.click();
-        await browser.pause(2000);
+        await CartPage.clickOnBurgerButton();
         // Check if burger menu are expanded and 4 items are displayed
-        const burgerMenu = await $('//*[@id="menu_button_container"]/div/div[2]/div[1]/nav');
-        await expect(burgerMenu).toBeDisplayed();
-        await expect(burgerMenu).toHaveChildren(4);
+        await expect(CartPage.burgerMenu).toBeDisplayed();
+        await expect(CartPage.burgerMenu).toHaveChildren(4);
 
         // Step 3
-        const logoutButton = await $('#logout_sidebar_link');
-        await logoutButton.click();
+        await CartPage.clickOnLogoutButton();
         await browser.pause(2000);
         // Check when Logout if User is redirecred to the "Login" page, "Username" and "Password" fields are empty
         await expect(browser).toHaveUrl('https://www.saucedemo.com/');
-        await browser.pause(2000);
-        const userNameField = await $('#user-name');
-        await expect(userNameField).toHaveValue('');
-        const passwordField = await $('#password');
-        await expect(passwordField).toHaveValue('');
+        await expect(LoginPage.inputUserName).toHaveValue('');
+        await expect(LoginPage.inputPassword).toHaveValue('');
 
         // Step 4
         await LoginPage.login('standard_user', 'secret_sauce');
-        await browser.pause(2000);
         // Check when Login user is redirected to the inventory page. Products and cart are displayed
         await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
-        const productsBlock = await $('#header_container');
-        await expect(productsBlock).toBeDisplayed();
-        await expect(productsBlock).toHaveTextContaining('Products');
-        const cartIcon = await $('#shopping_cart_container');
-        await expect(cartIcon).toBeDisplayed();
+        await expect(InventoryPage.productsBlock).toBeDisplayed();
+        await expect(InventoryPage.productsBlock).toHaveTextContaining('Products');
+        await expect(InventoryPage.cartIcon).toBeDisplayed();
 
         // Step 5
-        await $('.shopping_cart_link').click();
-        await browser.pause(2000);
+        await InventoryPage.clickOnCartLink();
         // Check if click on the cart the Cart page is displayed, product is the same as was added at step 1
         await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
-        await expect(cartList).toHaveTextContaining(productAddToCartName);
+        await expect(CartPage.cartList).toHaveTextContaining(backpackAddToCartName);
 
         // Remove the product
-        await $('#remove-sauce-labs-backpack').click();
+        await CartPage.clickOnRemoveBackpack();
     })
 
+    it('Test case #10(optional) Add to the Cart product if Cart is not empty', async () => {
+        // Preconditions
+         await browser.url(`https://www.saucedemo.com/`);
+         await LoginPage.login('standard_user', 'secret_sauce');
+          // Check if user is on the inventory page
+         await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
+
+         // Step 1 - Add the product to the Cart
+         await InventoryPage.clickOnBackpackAddToCart();
+         const backpackAddToCartName = 'Sauce Labs Backpack';
+         // Check if product is on the Cart
+        await InventoryPage.clickOnCartLink();
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
+        await expect(CartPage.cartList).toHaveTextContaining(backpackAddToCartName);
+
+        // Step 2 - Logout
+        await CartPage.clickOnBurgerButton();
+        await browser.pause(2000);
+        // Check if burger menu are expanded and 4 items are displayed
+        await expect(CartPage.burgerMenu).toBeDisplayed();
+        await expect(CartPage.burgerMenu).toHaveChildren(4);
+        await CartPage.clickOnLogoutButton();
+        await browser.pause(2000);
+        // Check when Logout if User is redirecred to the "Login" page, "Username" and "Password" fields are empty
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/');
+        await expect(LoginPage.inputUserName).toHaveValue('');
+        await expect(LoginPage.inputPassword).toHaveValue('');
+
+        // Step 3 Login with the same data
+        await LoginPage.login('standard_user', 'secret_sauce');
+        // Check when Login user is redirected to the inventory page. Products and cart are displayed
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
+
+        // Step 4 Add the new product to the Cart
+        // const productAddToCartNew = await $('#add-to-cart-sauce-labs-bike-light');
+        // const cartValue = await $('.shopping_cart_badge');
+        //Check if number near the cart at the top right increase by 1
+        let isCartNotEmpty = await InventoryPage.cartValue.isDisplayed();
+        if(isCartNotEmpty) {
+            let startNum = Number(await InventoryPage.cartValue.getText());
+            await InventoryPage.clickOnBikeAddToCart();
+            let newNum = startNum + 1;
+            let newNumText = newNum.toString();
+            await browser.pause(2000);
+            await expect(InventoryPage.cartValue).toHaveText(newNumText);
+        }
+        else {
+            await InventoryPage.clickOnBikeAddToCart();
+            await browser.pause(2000);
+            await expect(InventoryPage.cartValue).toHaveText('1');
+        }
+        // Check if the new product is added to cart
+        const BikeAddToCartName = 'Sauce Labs Bike Light';
+        await InventoryPage.clickOnCartLink();
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
+        await expect(CartPage.cartList).toHaveTextContaining(BikeAddToCartName);
+
+    })
+
+})
+
+describe('Test cases', () => {
+   
+    
     it('Test case #6 Sorting', async () => {
         // Preconditions
         await browser.url(`https://www.saucedemo.com/`);
@@ -456,74 +491,7 @@ describe('Test cases', () => {
          // Check if error message 'Cart is empty' is displayed
     })
 
-    it('Test case #10(optional) Add to the Cart product if Cart is not empty', async () => {
-        // Preconditions
-         await browser.url(`https://www.saucedemo.com/`);
-         await LoginPage.login('standard_user', 'secret_sauce');
-         await browser.pause(2000);
-         await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
-         // Step 1 - Add the product to the Cart
-         const productAddToCart = await $('#add-to-cart-sauce-labs-backpack');
-         await productAddToCart.click();
-         const productAddToCartName = 'Sauce Labs Backpack';
-         // Check if product is on the Cart
-        await $('.shopping_cart_link').click();
-        await browser.pause(2000);
-        await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
-        const cartList = await $('.cart_list');
-        await expect(cartList).toHaveTextContaining(productAddToCartName);
-
-        // Step 2 - Logout
-        const burgerButton = await $('#react-burger-menu-btn');
-        await burgerButton.click();
-        await browser.pause(2000);
-        // Check if burger menu are expanded and 4 items are displayed
-        const burgerMenu = await $('//*[@id="menu_button_container"]/div/div[2]/div[1]/nav');
-        await expect(burgerMenu).toBeDisplayed();
-        await expect(burgerMenu).toHaveChildren(4);
-        const logoutButton = await $('#logout_sidebar_link');
-        await logoutButton.click();
-        await browser.pause(2000);
-        // Check when Logout if User is redirecred to the "Login" page, "Username" and "Password" fields are empty
-        await expect(browser).toHaveUrl('https://www.saucedemo.com/');
-        await browser.pause(2000);
-        const userNameField = await $('#user-name');
-        await expect(userNameField).toHaveValue('');
-        const passwordField = await $('#password');
-        await expect(passwordField).toHaveValue('');
-
-        // Step 3 Login with the same data
-        await LoginPage.login('standard_user', 'secret_sauce');
-        await browser.pause(2000);
-        // Check when Login user is redirected to the inventory page. Products and cart are displayed
-        await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
-
-        // Step 4 Add the new product to the Cart
-        const productAddToCartNew = await $('#add-to-cart-sauce-labs-bike-light');
-        const cartValue = await $('.shopping_cart_badge');
-        //Check if number near the cart at the top right increase by 1
-        let isCartNotEmpty = await cartValue.isDisplayed();
-        if(isCartNotEmpty) {
-            let startNum = Number(await cartValue.getText());
-            await productAddToCartNew.click();
-            let newNum = startNum + 1;
-            let newNumText = newNum.toString();
-            await browser.pause(2000);
-            await expect(cartValue).toHaveText(newNumText);
-        }
-        else {
-            await productAddToCartNew.click();
-            await browser.pause(2000);
-            await expect(cartValue).toHaveText('1');
-        }
-        // Check if the new product is added to cart
-        const productAddToCartNameNew = 'Sauce Labs Bike Light';
-        await $('.shopping_cart_link').click();
-        await browser.pause(2000);
-        await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
-        await expect(cartList).toHaveTextContaining(productAddToCartNameNew);
-
-    })
+    
 })
 
 

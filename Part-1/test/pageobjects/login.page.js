@@ -20,6 +20,18 @@ class LoginPage extends Page {
         return $('#login-button');
     }
 
+    get logDiv () {
+        return $('//*[@id="login_button_container"]/div/form/div[1]');
+    }
+
+    get epicSadface () {
+        return $('//*[@id="login_button_container"]/div/form/div[3]/h3');
+    }
+
+    get pasDiv () {
+        return $('//*[@id="login_button_container"]/div/form/div[2]');
+    }
+
     async setUserNameInput(value) {
         await this.inputUserName.setValue(value)
     }
