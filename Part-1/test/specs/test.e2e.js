@@ -1,24 +1,23 @@
 import { expect } from '@wdio/globals'
 import LoginPage from '../pageobjects/login.page.js'
+import loginPage from '../pageobjects/login.page.js';
 
 describe('Test cases', () => {
-    it('Test case #1 Valid Login', async () => {
+    it.only('Test case #1 Valid Login', async () => {
         // Precondition
         await browser.url(`https://www.saucedemo.com/`);
-
+       
         // Step 1
-        const userNameField = await $('#user-name');
-        await userNameField.setValue('standard_user');
+        await LoginPage.setUserNameInput('standard_user');
         // Check if data is entered to the field
-        await expect(userNameField).toHaveValue('standard_user');
-
+        await expect(LoginPage.inputUserName).toHaveValue('standard_user');
+        
         // Step 2
-        const passwordField = await $('#password');
-        await passwordField.setValue('secret_sauce');
+        await loginPage.setPasswordInput('secret_sauce');
         // Check if data is entered to the field
-        await expect(passwordField).toHaveValue('secret_sauce');
+        await expect(LoginPage.inputPassword).toHaveValue('secret_sauce');
         // Check if data is represented as dots instead of characters
-        await expect(passwordField).toHaveAttribute('type', 'password');
+        await expect(LoginPage.inputPassword).toHaveAttribute('type','password');
 
         // Step 3
         await $('#login-button').click();
