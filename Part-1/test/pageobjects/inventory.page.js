@@ -38,6 +38,46 @@ class InventoryPage {
         return $('.shopping_cart_link');
     }
 
+    get sortingBox () {
+        return $('.product_sort_container');
+    }
+
+    get firstEl () {
+        return $('.inventory_list').$$('.inventory_item')[0];
+    }
+
+    get secondEl () {
+        return $('.inventory_list').$$('.inventory_item')[1];
+    }
+
+    get thirdEl () {
+        return $('.inventory_list').$$('.inventory_item')[2];
+    }
+
+    get forthEl () {
+        return $('.inventory_list').$$('.inventory_item')[3];
+    }
+
+    get fifthEl () {
+        return $('.inventory_list').$$('.inventory_item')[4];
+    }
+
+    get sixthEl () {
+        return $('.inventory_list').$$('.inventory_item')[5];
+    }
+
+    get twitButton () {
+        return $('//*[@id="page_wrapper"]/footer/ul/li[1]/a');
+    }
+
+    get facebButton () {
+        return $('//*[@id="page_wrapper"]/footer/ul/li[2]/a');
+    }
+
+    get linButton () {
+        return $('//*[@id="page_wrapper"]/footer/ul/li[3]/a');
+    }
+
     async clickOnBurgerButton() {
         await this.burgerButton.click();
     }
@@ -56,6 +96,18 @@ class InventoryPage {
 
     async clickOnCartLink() {
         await this.cartLink.click();
+    }
+
+    async clickOnTwitButton() {
+        await this.twitButton.click();
+    }
+
+    async clickOnFacebButton() {
+        await this.facebButton.click();
+    }
+
+    async clickOnLinButton() {
+        await this.linButton.click();
     }
 }
 

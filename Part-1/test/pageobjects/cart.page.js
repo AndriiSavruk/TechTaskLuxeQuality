@@ -22,6 +22,14 @@ class CartPage {
         return $('#remove-sauce-labs-backpack');
     }
 
+    get removeBike () {
+        return $('#remove-sauce-labs-bike-light');
+    }
+
+    get checkoutButton () {
+        return $('#checkout');
+    }
+
     async clickOnBurgerButton() {
         await this.burgerButton.click();
     }
@@ -32,6 +40,14 @@ class CartPage {
 
     async clickOnRemoveBackpack() {
         await this.removeBackpack.click();
+    }
+
+    async clickOnRemoveBike() {
+        await this.removeBike.click();
+    }
+
+    async clickOnCheckoutButton() {
+        await this.checkoutButton.click();
     }
 }
 
